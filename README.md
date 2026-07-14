@@ -1,2 +1,93 @@
 # OpenCV Testing
 
+Face + Body Recognition
+
+A desktop app that watches your webcam, detects people, and recognizes who
+they are by comparing against a database of enrolled faces you manage
+yourself. Two separate programs: one for the live camera feed, one for
+managing who it knows.
+
+Features
+
+
+Live camera window (camera.py) — detects every person's body in
+frame and tracks them as they move, detects faces and recognizes who they
+belong to, and shows how long each person has been in frame
+Admin dashboard (admin.py) — add people with a name + a few
+reference photos, view everyone enrolled, delete people you no longer
+need
+Recognized names "stick" to a person's tracked body even after their
+face is no longer visible (they turned away, moved further off, etc.)
+Runs as two independent native windows, not a browser — no server, no
+internet connection needed after initial setup
+Video display scales to fit the window as you resize it, without
+stretching the image
+
+
+Setup
+
+1. Install the required Python packages:
+
+pip install opencv-python pillow ultralytics numpy
+
+2. Download two model files into a models/ folder next to the project files:
+
+
+face_detection_yunet_2023mar_int8.onnx
+face_recognition_sface_2021dec.onnx
+
+
+Both come from the OpenCV Zoo GitHub repo:
+https://github.com/opencv/opencv_zoo
+
+(Find them under models/face_detection_yunet/ and
+models/face_recognition_sface/ in that repo, then use the
+"Download raw file" button to get the actual .onnx file.)
+
+3. That's it for setup. yolov8n.pt (the body detector) downloads
+itself automatically the first time camera.py runs — just needs internet
+that one time.
+
+Project structure
+
+your_project/
+    camera.py           <- run this for the live camera feed
+    admin.py             <- run this to manage enrolled people
+    database.py           <- shared SQLite database logic
+    face_utils.py          <- shared face detection/embedding logic
+    models/
+        face_detection_yunet_2023mar_int8.onnx
+        face_recognition_sface_2021dec.onnx
+    known_faces/          <- created automatically - reference photos live here
+    faces.db              <- created automatically - the database itself
+
+Usage
+
+Add people first:
+
+python admin.py
+
+Type a name, click "Select Photos...", pick a few clear front-facing
+photos, click "Add Person." Repeat for everyone you want recognized.
+
+Then run the camera:
+
+python camera.py
+
+Starts automatically - no button to click. If you add more people in
+admin.py while the camera is already running, click "Reload Known
+Faces" in the camera window to pick up the change without restarting.
+
+Notes
+
+
+Photos can have any filename, as long as they're a supported image type
+(.jpg, .jpeg, .png, .bmp, .webp) and sit under the right
+person's entry.
+Recognition accuracy depends a lot on your enrollment photos: clear,
+front-facing, decent lighting, a couple of different angles per person
+works best.
+If the webcam won't open, make sure no other program (Zoom, Teams,
+another instance of camera.py, etc.) is already using it.´
+
+(could not care less to make a read.me so yes AI did make this part fully thank you claude)
