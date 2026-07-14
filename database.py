@@ -1,9 +1,3 @@
-"""
-SQLite database for known people, their reference photos, and precomputed
-face embeddings. Photos themselves stay on disk (known_faces/<name>/...);
-this database stores the metadata and the embedding vectors so they don't
-need to be recomputed every time the app starts.
-"""
 
 import sqlite3
 import numpy as np
